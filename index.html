@@ -97,6 +97,10 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
   .lvl .st { font-size: 13px; margin-top: 3px; letter-spacing: 1px; }
   #guidebtn { pointer-events: auto; width: 46px; height: 46px; border-radius: 14px; font-size: 22px; display: grid; place-items: center; cursor: pointer; margin-left: auto; }
   #guidebtn + #pausebtn { margin-left: 0; }
+  #zoombox { position: fixed; right: max(12px, env(safe-area-inset-right)); bottom: calc(max(24px, env(safe-area-inset-bottom)) + 150px); display: flex; flex-direction: column; gap: 8px; z-index: 6; pointer-events: auto; }
+  #zoombox .zb { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-size: 24px; font-weight: 800; color: #fff; cursor: pointer;
+    background: rgba(30, 16, 70, .45); border: 2px solid rgba(255,255,255,.45); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); user-select: none; }
+  #zoombox .zb:active { transform: scale(.9); background: rgba(124, 77, 255, .7); }
   #fsbtn { pointer-events: auto; width: 46px; height: 46px; border-radius: 14px; font-size: 24px; display: grid; place-items: center; cursor: pointer; margin-left: auto; }
   #fsbtn:not(.hidden) + #guidebtn { margin-left: 0; }
   #app, #app canvas { width: 100vw !important; height: 100vh !important; height: 100dvh !important; }
@@ -207,6 +211,7 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
 <div id="lookzone"></div>
 
 <div id="hud" class="hidden">
+  <div id="zoombox"><div class="zb" id="zoomIn" title="Aproximar">＋</div><div class="zb" id="zoomOut" title="Afastar">－</div></div>
   <div id="topbar">
     <div class="chip" id="levelname">—</div>
     <div class="chip" id="scorechip">💥 <span id="score">0</span> <small>bagunça</small></div>
