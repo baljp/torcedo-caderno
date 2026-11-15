@@ -70,6 +70,12 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
   #herobadge { position: absolute; top: calc(max(10px, env(safe-area-inset-top)) + 54px); left: 12px; display: flex; gap: 6px; }
   #herobadge span { background: rgba(20,10,45,.6); border-radius: 12px; padding: 2px 10px; font-weight: 800; font-size: 14px; opacity: .55; border: 2px solid transparent; }
   #herobadge span.on { opacity: 1; border-color: #ffeb3b; }
+  #herobadge { pointer-events: auto; z-index: 5; }
+  #herobadge span { cursor: pointer; }
+  #herobadge span.fol { opacity: .9; border-color: #69f0ae; }
+  #btnCall { right: 40px; bottom: calc(max(30px, env(safe-area-inset-bottom)) + 182px); width: 56px; height: 56px; background: linear-gradient(160deg, #26a69a, #00695c); }
+  #btnCall .ico { font-size: 22px; } #btnCall .lbl { font-size: 10px; }
+  body.lefty #btnCall { right: auto; left: 40px; }
   @keyframes pulse { 50% { transform: scale(1.04); } }
 
   #say { position: absolute; left: 50%; bottom: 150px; transform: translate(-50%, 20px); max-width: min(560px, 88vw); background: #fff; color: #2a1650; border-radius: 22px; padding: 10px 18px; font-size: 18px; font-weight: 700; line-height: 1.25; box-shadow: 0 8px 0 rgba(0,0,0,.2); opacity: 0; transition: .25s; text-align: center; }
@@ -90,6 +96,16 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
   #stickers { font-size: 16px; }
   #powers { position: absolute; left: 12px; top: calc(max(10px, env(safe-area-inset-top)) + 92px); display: flex; flex-direction: column; gap: 6px; }
   #powers span { background: rgba(20,10,45,.7); border: 3px solid; border-radius: 14px; padding: 2px 10px; font-weight: 800; font-size: 16px; animation: pulse 1s infinite; }
+  #erasebar { position: absolute; left: 50%; top: calc(max(10px, env(safe-area-inset-top)) + 96px); transform: translateX(-50%); display: none; flex-direction: column; align-items: center; gap: 3px; background: rgba(20,10,45,.7); border-radius: 14px; padding: 4px 12px 6px; font-size: 14px; white-space: nowrap; }
+  #erasebar span { display: block; width: 170px; height: 9px; border-radius: 6px; background: #0006; overflow: hidden; border: 1.5px solid #fff8; }
+  #erasebar i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, #ffca28, #66bb6a); transition: width .3s; }
+  #erasebar.warn i { background: linear-gradient(90deg, #ff1744, #ff9100); }
+  #erasebar.warn { box-shadow: 0 0 0 3px #ff1744aa; }
+  #airbar { position: absolute; left: 50%; bottom: 120px; transform: translateX(-50%); display: none; align-items: center; gap: 8px; background: rgba(2,40,80,.65); border-radius: 14px; padding: 4px 12px; font-size: 15px; }
+  #airbar span { display: block; width: 160px; height: 10px; border-radius: 6px; background: #0007; overflow: hidden; border: 1.5px solid #b3e5fc; }
+  #airbar i { display: block; height: 100%; background: linear-gradient(90deg, #4fc3f7, #e1f5fe); }
+  #airbar.low i { background: linear-gradient(90deg, #ff1744, #ff8a80); }
+  #airbar.low { box-shadow: 0 0 0 3px #ff1744aa; }
   #timer { position: absolute; left: 50%; top: calc(max(10px, env(safe-area-inset-top)) + 54px); transform: translateX(-50%); background: rgba(20,10,45,.75); border: 3px solid #ffeb3b; border-radius: 16px; padding: 2px 16px; font-weight: 800; font-size: 20px; display: none; white-space: nowrap; }
   #timer.hurry { border-color: #ff5252; color: #ff8a80; animation: pulse .4s infinite; }
   .stars { font-size: 34px; letter-spacing: 4px; margin: 4px 0; }
@@ -97,7 +113,7 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
   .lvl .st { font-size: 13px; margin-top: 3px; letter-spacing: 1px; }
   #guidebtn { pointer-events: auto; width: 46px; height: 46px; border-radius: 14px; font-size: 22px; display: grid; place-items: center; cursor: pointer; margin-left: auto; }
   #guidebtn + #pausebtn { margin-left: 0; }
-  #zoombox { position: fixed; right: max(12px, env(safe-area-inset-right)); bottom: calc(max(24px, env(safe-area-inset-bottom)) + 150px); display: flex; flex-direction: column; gap: 8px; z-index: 6; pointer-events: auto; }
+  #zoombox { position: fixed; right: max(12px, env(safe-area-inset-right)); bottom: calc(max(24px, env(safe-area-inset-bottom)) + 255px); display: flex; flex-direction: column; gap: 8px; z-index: 6; pointer-events: auto; }
   #zoombox .zb { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-size: 24px; font-weight: 800; color: #fff; cursor: pointer;
     background: rgba(30, 16, 70, .45); border: 2px solid rgba(255,255,255,.45); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); user-select: none; }
   #zoombox .zb:active { transform: scale(.9); background: rgba(124, 77, 255, .7); }
@@ -276,6 +292,8 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
   <div id="compass"></div>
   <div id="powers"></div>
   <div id="timer"></div>
+  <div id="erasebar"><b></b><span><i></i></span></div>
+  <div id="airbar"><b>🫧 Ar</b><span><i></i></span></div>
 </div>
 <div id="keyhelp" class="hidden">WASD: andar · Espaço: pular/asas/planar · E: ação (segure para carregar) · C: cambalhota · Q: trocar · G: para onde ir · Esc: pausa</div>
 <div id="achtoast"></div>
@@ -284,6 +302,7 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
   <div id="joybase"><div id="joyknob"></div></div>
   <div id="joyhint">◀ arraste aqui para andar</div>
   <div class="tbtn" id="btnSwap"><span class="ico">🔄</span><span class="lbl">Trocar</span></div>
+  <div class="tbtn" id="btnCall" style="display:none"><span class="ico">📣</span><span class="lbl">Chamar</span></div>
   <div class="tbtn" id="btnRoll"><span class="ico">🌀</span><span class="lbl">Rolar</span></div>
   <div id="chargebar"><i></i></div>
   <div class="tbtn" id="btnAction"><span class="ico">👢</span><span class="lbl">Soprar</span></div>
@@ -466,6 +485,7 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
       <b>G</b><span>seta para o próximo objetivo</span>
       <b>Mouse</b><span>arraste para girar a câmera, roda para zoom</span>
       <b>Esc</b><span>pausa</span>
+      <b>R</b><span>chamar os amigos para seguirem você (fases com mais de um herói)</span>
     </div>
     <p style="font-size:14px">As teclas e os botões da tela podem ser mudados em <b>⚙️ Opções</b> (Teclado e Toque).</p>
     <p>💥 Trombe, sopre e derrube tudo para ganhar <b>Pontos de Bagunça</b>. Faça várias seguidas para fazer <b>COMBO</b>!</p>
