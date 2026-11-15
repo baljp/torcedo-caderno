@@ -1,5 +1,5 @@
 // Service worker: guarda o jogo no aparelho para funcionar sem internet.
-const CACHE = 'torcedo-v5';
+const CACHE = 'torcedo-v6';
 const CORE = ['./', './index.html', './manifest.json', './g.js', './img/torcedo.jpg', './img/dino.jpg', './img/praia.jpg', './img/esmeralda.jpg', './img/arvore.jpg', './img/galaxia.jpg', './img/icon-192.png', './img/icon-512.png'];
 
 self.addEventListener('install', e => {
