@@ -101,6 +101,43 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
   #zoombox .zb { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-size: 24px; font-weight: 800; color: #fff; cursor: pointer;
     background: rgba(30, 16, 70, .45); border: 2px solid rgba(255,255,255,.45); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); user-select: none; }
   #zoombox .zb:active { transform: scale(.9); background: rgba(124, 77, 255, .7); }
+  .btn.orange { background: linear-gradient(#ffb74d, #f57c00); box-shadow: 0 5px 0 #a64f00; }
+  .mainmenu { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .mainmenu .btn.big { min-width: 280px; }
+  .menurow { display: flex; flex-wrap: wrap; justify-content: center; max-width: 560px; }
+  .menurow .btn { font-size: 17px; padding: 8px 16px; }
+  .profchip { margin-top: 6px; font-size: 15px; background: rgba(20,10,50,.45); padding: 4px 14px; border-radius: 14px; }
+  .btn.purple { background: linear-gradient(160deg, #9575cd, #5e35b1); box-shadow: 0 6px 0 #311b92; }
+  .card.wide { max-width: 680px; width: 100%; }
+  .tabs { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 6px 0 10px; }
+  .tabs button { font: inherit; font-weight: 800; font-size: 15px; border: 0; border-radius: 12px; padding: 8px 12px; background: #ede7f6; color: #4527a0; cursor: pointer; }
+  .tabs button.on { background: #7c4dff; color: #fff; }
+  #op-body { text-align: left; max-height: 52vh; overflow: auto; padding-right: 4px; }
+  .op-tip { font-size: 14px; opacity: .9; margin: 4px 0 8px; }
+  .op-row { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 12px; background: rgba(124,77,255,.08); margin: 5px 0; flex-wrap: wrap; }
+  .op-i { font-size: 20px; width: 28px; text-align: center; }
+  .op-n { flex: 1; min-width: 150px; font-weight: 700; font-size: 15px; }
+  .op-v { display: flex; align-items: center; gap: 8px; }
+  .op-v input[type=range] { width: 160px; accent-color: #ffe14d; }
+  .op-row .btn.small { font-size: 14px; padding: 5px 12px; margin: 0; }
+  kbd { display: inline-block; min-width: 34px; text-align: center; background: #fff; color: #2a1660; border-radius: 8px; padding: 2px 8px; font-family: inherit; font-weight: 800; box-shadow: 0 3px 0 #9e9ec0; }
+  .blink { animation: blink 0.8s infinite; color: #e65100; }
+  @keyframes blink { 50% { opacity: .3; } }
+  .pf { background: rgba(124,77,255,.08); border: 3px solid transparent; border-radius: 18px; padding: 10px 14px; margin: 8px 0; text-align: left; }
+  .pf.on { border-color: #7c4dff; }
+  .pf-h { display: flex; align-items: center; gap: 10px; }
+  .pf-n { width: 34px; height: 34px; border-radius: 50%; color: #fff; background: #7c4dff; display: grid; place-items: center; font-weight: 800; }
+  .pf-name { flex: 1; font: inherit; font-weight: 800; font-size: 20px; color: #2a1660; background: transparent; border: 0; border-bottom: 2px dashed rgba(42,22,96,.35); padding: 2px 4px; }
+  .pf-s { margin: 6px 0; font-size: 15px; }
+  .pf-b { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .pf-b .btn.small { font-size: 15px; padding: 6px 14px; margin: 0; }
+  .pf-tag { color: #2e7d32; font-weight: 800; }
+  .padfocus { outline: 4px solid #ff9800 !important; outline-offset: 3px; transform: scale(1.05); }
+  .savedinfo { font-size: 13px; opacity: .8; margin: 4px 0 8px; }
+  #savedot { position: fixed; left: 50%; top: calc(max(10px, env(safe-area-inset-top)) + 4px); transform: translateX(-50%); z-index: 7; pointer-events: none;
+    font-size: 14px; font-weight: 700; padding: 3px 10px; border-radius: 12px; background: rgba(20,10,50,.55); color: #fff; opacity: 0; transition: opacity .4s; }
+  #savedot.on { opacity: 1; }
+  #missions .m.bonus { color: #ffe082; }
   #fsbtn { pointer-events: auto; width: 46px; height: 46px; border-radius: 14px; font-size: 24px; display: grid; place-items: center; cursor: pointer; margin-left: auto; }
   #fsbtn:not(.hidden) + #guidebtn { margin-left: 0; }
   #app, #app canvas { width: 100vw !important; height: 100vh !important; height: 100dvh !important; }
@@ -211,6 +248,7 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
 <div id="lookzone"></div>
 
 <div id="hud" class="hidden">
+  <div id="savedot">💾 Salvo</div>
   <div id="zoombox"><div class="zb" id="zoomIn" title="Aproximar">＋</div><div class="zb" id="zoomOut" title="Afastar">－</div></div>
   <div id="topbar">
     <div class="chip" id="levelname">—</div>
@@ -248,8 +286,17 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
   <div class="logo"><span>TORCEDO</span></div>
   <div class="sub">e o Caderno sem Cor</div>
   <img class="art" src="img/torcedo.jpg" alt="Desenho do Torcedo feito pelo Pedro">
-  <div><button class="btn big" id="playbtn">▶ JOGAR</button></div>
-  <div><button class="btn blue" id="howbtn">🎮 Como jogar</button></div>
+  <div class="mainmenu">
+    <button class="btn big green hidden" id="contbtn">⏩ Continuar</button>
+    <button class="btn big" id="playbtn">▶ JOGAR</button>
+    <div class="menurow">
+      <button class="btn blue" id="profbtn">💾 Perfis</button>
+      <button class="btn purple" id="optbtn">⚙️ Opções</button>
+      <button class="btn orange" id="extbtn">🎁 Extras</button>
+      <button class="btn gray" id="howbtn">🎮 Como jogar</button>
+    </div>
+    <div class="profchip" id="profchip"></div>
+  </div>
   <div id="loading">Carregando o mundo 3D...</div>
   <div class="credit">Personagens criados pelo Pedro ✏️</div>
 </div>
@@ -266,7 +313,7 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
       <button class="btn gray small toggle" id="m-easy">🐣 Modo fácil</button>
     </div>
     <div class="grid" id="grid"></div>
-    <div class="row"><button class="btn gray" id="maptitle">⬅ Início</button></div>
+    <div class="row"><button class="btn gray" id="maptitle" data-back>⬅ Início</button></div>
   </div>
 </div>
 
@@ -278,8 +325,41 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
     <div class="heroes" id="st-heroes"></div>
     <p id="st-text"></p>
     <ul class="tips" id="st-tips"></ul>
+    <button class="btn big green hidden" id="st-cont">⏩ Continuar de onde parei</button>
     <button class="btn big green" id="st-go">Começar!</button>
-    <div><button class="btn gray" id="st-back">⬅ Mapa</button></div>
+    <div><button class="btn gray" id="st-back" data-back>⬅ Mapa</button></div>
+  </div>
+</div>
+
+
+<!-- Perfis (espaços de salvamento) -->
+<div class="screen dim hidden" id="profiles">
+  <div class="card wide">
+    <h2>💾 Perfis de jogo</h2>
+    <p>Cada perfil guarda as fases, estrelas, figurinhas e conquistas separados. Toque no nome para mudar.</p>
+    <div id="pf-list"></div>
+    <div class="row"><button class="btn gray" id="pf-back" data-back>⬅ Voltar</button></div>
+  </div>
+</div>
+
+<!-- Opções -->
+<div class="screen dim hidden" id="options">
+  <div class="card wide">
+    <h2>⚙️ Opções</h2>
+    <div class="tabs" id="op-tabs"><button data-tab="keys">⌨️ Teclado</button><button data-tab="pad">🎮 Controle</button><button data-tab="cam">🎥 Câmera</button><button data-tab="av">🔊 Som e imagem</button></div>
+    <div id="op-body"></div>
+    <div class="row"><button class="btn gray" id="op-back" data-back>⬅ Voltar</button></div>
+  </div>
+</div>
+
+<!-- Extras -->
+<div class="screen dim hidden" id="extras">
+  <div class="card">
+    <h2>🎁 Extras</h2>
+    <div class="row"><button class="btn blue" id="ex-album">🃏 Álbum de figurinhas</button></div>
+    <div class="row"><button class="btn" id="ex-achs">🏆 Conquistas</button></div>
+    <div class="row"><button class="btn green" id="ex-free">🎪 Bagunça Livre</button></div>
+    <div class="row"><button class="btn gray" id="ex-back" data-back>⬅ Voltar</button></div>
   </div>
 </div>
 
@@ -287,8 +367,10 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
 <div class="screen dim hidden" id="pause">
   <div class="card">
     <h2>⏸ Pausa</h2>
-    <div class="row"><button class="btn green" id="p-resume">▶ Continuar</button></div>
+    <div class="row"><button class="btn green" id="p-resume" data-back>▶ Continuar</button></div>
     <div class="row"><button class="btn blue" id="p-restart">🔁 Recomeçar fase</button><button class="btn" id="p-map">🗺️ Mapa</button></div>
+    <div class="row"><button class="btn purple" id="p-opts">⚙️ Opções</button><button class="btn orange" id="p-save">💾 Salvar e sair</button></div>
+    <p class="savedinfo" id="p-saved">💾 O jogo salva sozinho enquanto você joga.</p>
     <p><b>Som</b></p>
     <div class="seg" id="seg-sound"><button data-v="on">🔊 Ligado</button><button data-v="off">🔇 Desligado</button></div>
     <p><b>Gráficos</b></p>
@@ -320,7 +402,7 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
     <h2>🃏 Álbum de Figurinhas do Pedro</h2>
     <p id="al-count"></p>
     <div id="al-grid"></div>
-    <div class="row"><button class="btn gray" id="al-back">⬅ Mapa</button></div>
+    <div class="row"><button class="btn gray" id="al-back" data-back>⬅ Mapa</button></div>
   </div>
 </div>
 
@@ -330,7 +412,7 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
     <h2>🏆 Conquistas</h2>
     <p id="ac-count"></p>
     <div id="ac-list"></div>
-    <div class="row"><button class="btn gray" id="ac-back">⬅ Mapa</button></div>
+    <div class="row"><button class="btn gray" id="ac-back" data-back>⬅ Mapa</button></div>
   </div>
 </div>
 
@@ -350,7 +432,7 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
 <!-- Como jogar -->
 <div class="screen dim hidden" id="how">
   <div class="card">
-    <div class="close" id="how-x">✕</div>
+    <div class="close" id="how-x" data-back>✕</div>
     <h2>🎮 Como jogar</h2>
     <p><b>No celular/tablet</b></p>
     <div class="ctrl">
@@ -374,6 +456,19 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
       <b>G</b><span>seta para o próximo objetivo</span>
       <b>Mouse</b><span>arraste para girar a câmera, roda para zoom</span>
       <b>Esc</b><span>pausa</span>
+    </div>
+    <p style="font-size:14px">As teclas podem ser trocadas em <b>⚙️ Opções → Teclado</b>.</p>
+    <p><b>Com controle de videogame (PS4, PS5, Xbox)</b></p>
+    <div class="ctrl">
+      <b>Analógico esquerdo</b><span>andar</span>
+      <b>Analógico direito</b><span>girar a câmera</span>
+      <b>✕</b><span>pular / asas / planar</span>
+      <b>□</b><span>soprar ou pisão (segure para carregar)</span>
+      <b>○</b><span>cambalhota</span>
+      <b>△</b><span>trocar personagem</span>
+      <b>L1 / R1</b><span>aproximar / afastar a câmera</span>
+      <b>Share</b><span>seta para o próximo objetivo</span>
+      <b>Options</b><span>pausa · nos menus: ✕ escolhe, ○ volta</span>
     </div>
     <p>💥 Trombe, sopre e derrube tudo para ganhar <b>Pontos de Bagunça</b>. Faça várias seguidas para fazer <b>COMBO</b>!</p>
     <p>✋ Perto de um objeto que dá pra carregar, o botão de ação vira <b>Pegar</b>. Aperte de novo para <b>Jogar</b>.</p>

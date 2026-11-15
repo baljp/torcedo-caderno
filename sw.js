@@ -1,5 +1,5 @@
 // Service worker: guarda o jogo no aparelho para funcionar sem internet.
-const CACHE = 'torcedo-ed80410ae9'; // trocado automaticamente a cada build (tools/build.sh)
+const CACHE = 'torcedo-f41e0be66e'; // trocado automaticamente a cada build (tools/build.sh)
 const CORE = ['./', './index.html', './manifest.json', './g.js', './img/torcedo.jpg', './img/dino.jpg', './img/praia.jpg', './img/esmeralda.jpg', './img/arvore.jpg', './img/galaxia.jpg', './img/icon-192.png', './img/icon-512.png'];
 
 self.addEventListener('message', e => { if (e.data === 'skip') self.skipWaiting(); });
