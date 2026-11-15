@@ -97,6 +97,9 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
   .lvl .st { font-size: 13px; margin-top: 3px; letter-spacing: 1px; }
   #guidebtn { pointer-events: auto; width: 46px; height: 46px; border-radius: 14px; font-size: 22px; display: grid; place-items: center; cursor: pointer; margin-left: auto; }
   #guidebtn + #pausebtn { margin-left: 0; }
+  #fsbtn { pointer-events: auto; width: 46px; height: 46px; border-radius: 14px; font-size: 24px; display: grid; place-items: center; cursor: pointer; margin-left: auto; }
+  #fsbtn:not(.hidden) + #guidebtn { margin-left: 0; }
+  #app, #app canvas { width: 100vw !important; height: 100vh !important; height: 100dvh !important; }
   #btnRoll { right: 132px; bottom: calc(max(24px, env(safe-area-inset-bottom)) + 94px); width: 62px; height: 62px; background: linear-gradient(160deg, #26c6da, #00838f); }
   #btnRoll .ico { font-size: 24px; }
   #chargebar { position: absolute; left: 50%; bottom: 120px; transform: translateX(-50%); width: 160px; height: 14px; border-radius: 8px; background: #0007; border: 2px solid #fff; display: none; overflow: hidden; }
@@ -208,6 +211,7 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
     <div class="chip" id="levelname">—</div>
     <div class="chip" id="scorechip">💥 <span id="score">0</span> <small>bagunça</small></div>
     <div class="chip" id="stickers"></div>
+    <div class="chip hidden" id="fsbtn" title="Tela cheia">⛶</div>
     <div class="chip" id="guidebtn" title="Para onde ir?">🧭</div>
     <div class="chip" id="pausebtn">⏸</div>
   </div>
