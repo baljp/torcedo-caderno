@@ -190,6 +190,15 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
   #btnSwap { right: 40px; bottom: calc(max(30px, env(safe-area-inset-bottom)) + 110px); width: 64px; height: 64px; background: linear-gradient(160deg, #ab47bc, #6a1b9a); }
   #btnSwap .ico { font-size: 24px; }
   body.desktop #touch .tbtn, body.desktop #joyhint { display: none; }
+  :root { --tbs: 1; --tbo: 1; }
+  #touch .tbtn { zoom: var(--tbs); opacity: var(--tbo); }
+  #zoombox { opacity: max(.55, var(--tbo)); }
+  body.lefty #btnJump { right: auto; left: 24px; }
+  body.lefty #btnAction { right: auto; left: 132px; }
+  body.lefty #btnRoll { right: auto; left: 132px; }
+  body.lefty #btnSwap { right: auto; left: 40px; }
+  body.lefty #zoombox { right: auto; left: max(12px, env(safe-area-inset-left)); }
+  body.lefty #joyhint { left: auto; right: 24px; }
   #keyhelp { position: fixed; left: 12px; bottom: 10px; z-index: 3; font-size: 13px; opacity: .75; font-weight: 700; text-shadow: 0 1px 2px #000; pointer-events: none; }
   body:not(.desktop) #keyhelp { display: none; }
 
@@ -346,7 +355,7 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
 <div class="screen dim hidden" id="options">
   <div class="card wide">
     <h2>⚙️ Opções</h2>
-    <div class="tabs" id="op-tabs"><button data-tab="keys">⌨️ Teclado</button><button data-tab="pad">🎮 Controle</button><button data-tab="cam">🎥 Câmera</button><button data-tab="av">🔊 Som e imagem</button></div>
+    <div class="tabs" id="op-tabs"><button data-tab="touch">📱 Toque</button><button data-tab="keys">⌨️ Teclado</button><button data-tab="pad" class="hidden">🎮 Controle</button><button data-tab="cam">🎥 Câmera</button><button data-tab="av">🔊 Som e imagem</button></div>
     <div id="op-body"></div>
     <div class="row"><button class="btn gray" id="op-back" data-back>⬅ Voltar</button></div>
   </div>
@@ -420,10 +429,11 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
 <div class="screen dim hidden" id="ending">
   <div class="card">
     <div style="font-size:56px">🌈✏️🎉</div>
-    <h2>AS CORES VOLTARAM!</h2>
-    <p>O Torcedo e o Dino venceram a Grande Borracha e recuperaram os 15 Lápis Mágicos. O caderno do Pedro está colorido de novo!</p>
+    <h2 id="end-title">AS CORES VOLTARAM!</h2>
+    <p id="end-text">O Torcedo e o Dino venceram a Grande Borracha e recuperaram os 15 Lápis Mágicos. O caderno do Pedro está colorido de novo!</p>
     <img src="img/torcedo.jpg" style="width:120px;border-radius:10px;border:5px solid #fff;transform:rotate(-4deg);box-shadow:0 6px 20px #0004">
     <img src="img/dino.jpg" style="width:120px;border-radius:10px;border:5px solid #fff;transform:rotate(5deg);box-shadow:0 6px 20px #0004">
+    <img id="end-img3" src="img/amigos.jpg" style="display:none;width:150px;border-radius:10px;border:5px solid #fff;transform:rotate(-2deg);box-shadow:0 6px 20px #0004">
     <p><b>Personagens e desenhos: Pedro</b><br>Obrigado por jogar!</p>
     <div class="row"><button class="btn green big" id="end-map">🗺️ Voltar ao mapa</button></div>
   </div>
@@ -457,19 +467,7 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
       <b>Mouse</b><span>arraste para girar a câmera, roda para zoom</span>
       <b>Esc</b><span>pausa</span>
     </div>
-    <p style="font-size:14px">As teclas podem ser trocadas em <b>⚙️ Opções → Teclado</b>.</p>
-    <p><b>Com controle de videogame (PS4, PS5, Xbox)</b></p>
-    <div class="ctrl">
-      <b>Analógico esquerdo</b><span>andar</span>
-      <b>Analógico direito</b><span>girar a câmera</span>
-      <b>✕</b><span>pular / asas / planar</span>
-      <b>□</b><span>soprar ou pisão (segure para carregar)</span>
-      <b>○</b><span>cambalhota</span>
-      <b>△</b><span>trocar personagem</span>
-      <b>L1 / R1</b><span>aproximar / afastar a câmera</span>
-      <b>Share</b><span>seta para o próximo objetivo</span>
-      <b>Options</b><span>pausa · nos menus: ✕ escolhe, ○ volta</span>
-    </div>
+    <p style="font-size:14px">As teclas e os botões da tela podem ser mudados em <b>⚙️ Opções</b> (Teclado e Toque).</p>
     <p>💥 Trombe, sopre e derrube tudo para ganhar <b>Pontos de Bagunça</b>. Faça várias seguidas para fazer <b>COMBO</b>!</p>
     <p>✋ Perto de um objeto que dá pra carregar, o botão de ação vira <b>Pegar</b>. Aperte de novo para <b>Jogar</b>.</p>
     <p>⚡🦘🛡️🧲💥 <b>Itens especiais</b>: velocidade, super pulo, escudo, ímã de tinta e super força.</p>
@@ -477,6 +475,6 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
   </div>
 </div>
 
-<script type="module" src="g.js"></script>
+<script type="module" src="l.js"></script>
 </body>
 </html>
