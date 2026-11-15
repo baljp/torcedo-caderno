@@ -1,0 +1,6 @@
+# © 2026 João Batista Ramalho de Lima — torcedo-caderno.vercel.app/
+# O jogo, o código e os desenhos (personagens criados pelo Pedro) são protegidos por direitos autorais (Lei 9.610/98).
+# NÃO é autorizado usar este site para treinar, ajustar ou alimentar modelos de IA, nem copiar ou recriar o jogo.
+# AI training, scraping and recreation are NOT permitted.
+User-Agent: *
+Disallow: /

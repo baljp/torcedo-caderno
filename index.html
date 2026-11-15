@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Torcedo e o Caderno sem Cor</title>
+<meta name="description" content="Jogo 3D infantil: ajude o Torcedo e o Dino a devolver as cores ao caderno em 15 fases. Personagens criados pelo Pedro.">
+<meta name="robots" content="noai, noimageai, noarchive">
+<meta name="tdm-reservation" content="1">
+<meta name="copyright" content="© 2026 João Batista Ramalho de Lima — todos os direitos reservados (Lei 9.610/98). Personagens e desenhos do Pedro.">
+<link rel="canonical" href="https://torcedo-caderno.vercel.app/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Torcedo e o Caderno sem Cor">
+<meta property="og:title" content="Torcedo e o Caderno sem Cor 🐰🪶👢">
+<meta property="og:description" content="Jogo 3D grátis no navegador: 15 fases com o Torcedo e o Dino. Joga no celular e no computador.">
+<meta property="og:url" content="https://torcedo-caderno.vercel.app/">
+<meta property="og:image" content="https://torcedo-caderno.vercel.app/img/icon-512.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Torcedo e o Caderno sem Cor">
+<meta name="twitter:description" content="Jogo 3D grátis: 15 fases com o Torcedo e o Dino.">
+<meta name="twitter:image" content="https://torcedo-caderno.vercel.app/img/icon-512.png">
+<link rel="icon" type="image/png" href="img/icon-192.png">
+<script>
+/* proteção leve: abre fora de iframes de terceiros, sem menu de contexto, sem arrastar nem copiar */
+(function(){try{if(window.top!==window.self&&!/claude|anthropic|usercontent/.test(document.referrer+location.host)){window.top.location=window.self.location;}}catch(e){}
+document.addEventListener('contextmenu',function(e){e.preventDefault();});
+document.addEventListener('dragstart',function(e){e.preventDefault();});
+document.addEventListener('copy',function(e){e.preventDefault();});
+document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();if(e.key==='F12'||((e.ctrlKey||e.metaKey)&&(k==='u'||k==='s'||k==='p'))||((e.ctrlKey||e.metaKey)&&(e.shiftKey||e.altKey)&&(k==='i'||k==='j'||k==='c'))){e.preventDefault();e.stopPropagation();}},true);})();
+</script>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7c4dff">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+  "cannon-es": "https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"
+} }
+</script>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #1a1033; font-family: 'Baloo 2', 'Trebuchet MS', sans-serif; color: #fff; user-select: none; -webkit-user-select: none; touch-action: none; }
+  #app, #app canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+  #lookzone { position: fixed; inset: 0; z-index: 2; touch-action: none; }
+  .hidden { display: none !important; }
+
+  /* ---------- HUD ---------- */
+  #hud { position: fixed; inset: 0; z-index: 3; pointer-events: none; }
+  #topbar { position: absolute; top: max(10px, env(safe-area-inset-top)); left: 12px; right: 12px; display: flex; align-items: flex-start; gap: 10px; }
+  .chip { background: rgba(20, 10, 45, .62); backdrop-filter: blur(6px); border: 2px solid rgba(255,255,255,.18); border-radius: 16px; padding: 4px 14px; font-weight: 800; text-shadow: 0 2px 0 rgba(0,0,0,.35); }
+  #levelname { font-size: 15px; }
+  #scorechip { font-size: 20px; display: flex; align-items: center; gap: 6px; }
+  #scorechip small { font-size: 12px; opacity: .8; font-weight: 700; }
+  #pausebtn { pointer-events: auto; margin-left: auto; width: 46px; height: 46px; border-radius: 14px; font-size: 22px; display: grid; place-items: center; cursor: pointer; }
+  #missions { position: absolute; top: calc(max(10px, env(safe-area-inset-top)) + 54px); right: 12px; width: min(300px, 46vw); pointer-events: auto; padding: 8px 12px 10px; }
+  #missions .title { font-size: 14px; letter-spacing: .5px; opacity: .9; cursor: pointer; display: flex; justify-content: space-between; }
+  #missions.collapsed .list { display: none; }
+  #missions .m { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; font-weight: 700; line-height: 1.25; margin-top: 6px; }
+  #missions .m b { color: #ffeb3b; }
+  #missions .ck { flex: 0 0 20px; height: 20px; border-radius: 6px; border: 2px solid #fff8; display: grid; place-items: center; font-size: 13px; }
+  #missions .m.done { opacity: .6; text-decoration: line-through; }
+  #missions .m.done .ck { background: #43a047; border-color: #43a047; }
+  #missions .m.pencil .ck { border: none; }
+  #missions .m.pencil.go { color: #ffeb3b; animation: pulse 1s infinite; }
+  #herobadge { position: absolute; top: calc(max(10px, env(safe-area-inset-top)) + 54px); left: 12px; display: flex; gap: 6px; }
+  #herobadge span { background: rgba(20,10,45,.6); border-radius: 12px; padding: 2px 10px; font-weight: 800; font-size: 14px; opacity: .55; border: 2px solid transparent; }
+  #herobadge span.on { opacity: 1; border-color: #ffeb3b; }
+  @keyframes pulse { 50% { transform: scale(1.04); } }
+
+  #say { position: absolute; left: 50%; bottom: 150px; transform: translate(-50%, 20px); max-width: min(560px, 88vw); background: #fff; color: #2a1650; border-radius: 22px; padding: 10px 18px; font-size: 18px; font-weight: 700; line-height: 1.25; box-shadow: 0 8px 0 rgba(0,0,0,.2); opacity: 0; transition: .25s; text-align: center; }
+  #say b { color: #1e88e5; }
+  #say.who-borrachinha b, #say.who-borracho b { color: #e91e63; }
+  #say.show { opacity: 1; transform: translate(-50%, 0); }
+  #toast { position: absolute; left: 50%; top: 22%; transform: translate(-50%, -10px); background: linear-gradient(135deg, #ff4081, #7c4dff); padding: 8px 20px; border-radius: 18px; font-size: 19px; font-weight: 800; opacity: 0; transition: .25s; white-space: nowrap; max-width: 92vw; overflow: hidden; text-overflow: ellipsis; box-shadow: 0 6px 0 rgba(0,0,0,.25); }
+  #toast.show { opacity: 1; transform: translate(-50%, 0); }
+  #combo { position: absolute; left: 50%; top: 31%; transform: translate(-50%, 0) scale(0); font-size: 34px; font-weight: 800; color: #ffeb3b; text-shadow: 0 4px 0 #e65100, 0 0 20px #ff6d00; white-space: nowrap; }
+  #combo.pop { animation: combo 1.2s ease-out forwards; }
+  @keyframes combo { 0% { transform: translate(-50%,0) scale(0) rotate(-8deg); opacity: 1 } 15% { transform: translate(-50%,0) scale(1.25) rotate(4deg) } 30% { transform: translate(-50%,0) scale(1) rotate(0) } 80% { opacity: 1 } 100% { transform: translate(-50%,-30px) scale(1); opacity: 0 } }
+  #floats { position: absolute; inset: 0; overflow: hidden; }
+  .float { position: absolute; left: 0; top: 0; font-weight: 800; font-size: 20px; text-shadow: 0 2px 0 #000a, 0 0 6px #0008; white-space: nowrap; }
+  .float.big { font-size: 26px; }
+  #compass { position: absolute; left: 50%; top: 70px; width: 0; height: 0; display: none; transform-origin: 50% 50%; }
+  #compass::before { content: '✏️'; position: absolute; left: -16px; top: -16px; font-size: 26px; filter: drop-shadow(0 2px 2px #000); }
+  #stickers:empty { display: none; }
+  #stickers { font-size: 16px; }
+  #powers { position: absolute; left: 12px; top: calc(max(10px, env(safe-area-inset-top)) + 92px); display: flex; flex-direction: column; gap: 6px; }
+  #powers span { background: rgba(20,10,45,.7); border: 3px solid; border-radius: 14px; padding: 2px 10px; font-weight: 800; font-size: 16px; animation: pulse 1s infinite; }
+  #timer { position: absolute; left: 50%; top: calc(max(10px, env(safe-area-inset-top)) + 54px); transform: translateX(-50%); background: rgba(20,10,45,.75); border: 3px solid #ffeb3b; border-radius: 16px; padding: 2px 16px; font-weight: 800; font-size: 20px; display: none; white-space: nowrap; }
+  #timer.hurry { border-color: #ff5252; color: #ff8a80; animation: pulse .4s infinite; }
+  .stars { font-size: 34px; letter-spacing: 4px; margin: 4px 0; }
+  .stars .off { filter: grayscale(1); opacity: .35; }
+  .lvl .st { font-size: 13px; margin-top: 3px; letter-spacing: 1px; }
+  #guidebtn { pointer-events: auto; width: 46px; height: 46px; border-radius: 14px; font-size: 22px; display: grid; place-items: center; cursor: pointer; margin-left: auto; }
+  #guidebtn + #pausebtn { margin-left: 0; }
+  #btnRoll { right: 132px; bottom: calc(max(24px, env(safe-area-inset-bottom)) + 94px); width: 62px; height: 62px; background: linear-gradient(160deg, #26c6da, #00838f); }
+  #btnRoll .ico { font-size: 24px; }
+  #chargebar { position: absolute; left: 50%; bottom: 120px; transform: translateX(-50%); width: 160px; height: 14px; border-radius: 8px; background: #0007; border: 2px solid #fff; display: none; overflow: hidden; }
+  #chargebar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #ffeb3b, #ff5722); }
+  #chargebar.full i { background: linear-gradient(90deg, #ff4081, #7c4dff); animation: pulse .3s infinite; }
+  #achtoast { position: fixed; left: 50%; top: 14px; transform: translate(-50%, -140%); z-index: 30; display: flex; gap: 10px; align-items: center; background: linear-gradient(135deg, #ffd54f, #ff9800); color: #3e2000; border-radius: 18px; padding: 8px 18px 8px 10px; box-shadow: 0 6px 0 rgba(0,0,0,.25); transition: transform .4s cubic-bezier(.2,1.6,.4,1); pointer-events: none; }
+  #achtoast.show { transform: translate(-50%, 0); }
+  #achtoast .ai { font-size: 34px; }
+  #achtoast small { display: block; font-size: 11px; font-weight: 800; letter-spacing: 1px; }
+  #achtoast b { font-size: 18px; }
+  .btn.small { font-size: 15px; padding: 7px 14px; margin: 4px; }
+  .btn.toggle.on { background: linear-gradient(160deg, #ffca28, #f57f17); box-shadow: 0 6px 0 #e65100; }
+  .card.wide { max-width: 900px; }
+  .alrow { text-align: left; margin: 10px 0; }
+  .alname { font-weight: 800; font-size: 15px; margin-bottom: 4px; }
+  .alcards { display: flex; gap: 10px; }
+  .card-st { width: 92px; height: 120px; border-radius: 10px; border: 4px solid #ffd54f; position: relative; overflow: hidden; background: #fff; box-shadow: 0 4px 0 #0002; }
+  .card-st img { width: 100%; height: 100%; object-fit: cover; }
+  .card-st span { position: absolute; left: 4px; bottom: 2px; font-size: 12px; font-weight: 800; color: #fff; text-shadow: 0 1px 2px #000; }
+  .card-st.empty { border-color: #c5b8e0; background: repeating-linear-gradient(45deg, #ede7f6, #ede7f6 8px, #e1d8f2 8px, #e1d8f2 16px); display: grid; place-items: center; }
+  .card-st.empty b { font-size: 40px; color: #b39ddb; }
+  .card-st.empty span { color: #7e57c2; text-shadow: none; }
+  #ac-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; text-align: left; margin-top: 8px; }
+  .ach { display: flex; gap: 10px; align-items: center; background: #ede7f6; border-radius: 14px; padding: 8px 10px; opacity: .8; }
+  .ach.got { background: linear-gradient(135deg, #fff8e1, #ffe082); opacity: 1; }
+  .ach .ai { font-size: 30px; }
+  .ach b { display: block; font-size: 15px; }
+  .ach small { display: block; font-size: 12px; line-height: 1.2; }
+  .ach .bar { height: 7px; background: #d1c4e9; border-radius: 4px; margin: 4px 0 1px; overflow: hidden; }
+  .ach .bar i { display: block; height: 100%; background: #7c4dff; }
+  .medal { font-size: 30px; vertical-align: middle; }
+  #underwater { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(ellipse at center, rgba(0,140,200,.05), rgba(0,40,90,.45)); opacity: 0; transition: opacity .3s; }
+  #underwater.on { opacity: 1; }
+  #vignette { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,.28)); }
+
+  /* ---------- Controles de toque ---------- */
+  #touch { position: fixed; inset: 0; z-index: 4; pointer-events: none; }
+  #joybase { position: absolute; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,.15); border: 3px solid rgba(255,255,255,.4); display: none; }
+  #joyknob { position: absolute; left: 30px; top: 30px; width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,.75); box-shadow: 0 4px 10px #0005; }
+  #joyhint { position: absolute; left: 24px; bottom: max(28px, env(safe-area-inset-bottom)); font-size: 13px; font-weight: 700; opacity: .6; }
+  .tbtn { position: absolute; pointer-events: auto; border-radius: 50%; display: grid; place-items: center; text-align: center; font-weight: 800; color: #fff; border: 3px solid rgba(255,255,255,.55); box-shadow: 0 6px 0 rgba(0,0,0,.3); touch-action: none; cursor: pointer; }
+  .tbtn .ico { font-size: 30px; line-height: 1; display: block; }
+  .tbtn .lbl { font-size: 12px; display: block; margin-top: -2px; }
+  .tbtn.down { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,.3); filter: brightness(1.2); }
+  #btnJump { right: 24px; bottom: max(30px, env(safe-area-inset-bottom)); width: 96px; height: 96px; background: linear-gradient(160deg, #42a5f5, #1565c0); }
+  #btnAction { right: 132px; bottom: max(24px, env(safe-area-inset-bottom)); width: 80px; height: 80px; background: linear-gradient(160deg, #ff8a65, #d84315); }
+  #btnSwap { right: 40px; bottom: calc(max(30px, env(safe-area-inset-bottom)) + 110px); width: 64px; height: 64px; background: linear-gradient(160deg, #ab47bc, #6a1b9a); }
+  #btnSwap .ico { font-size: 24px; }
+  body.desktop #touch .tbtn, body.desktop #joyhint { display: none; }
+  #keyhelp { position: fixed; left: 12px; bottom: 10px; z-index: 3; font-size: 13px; opacity: .75; font-weight: 700; text-shadow: 0 1px 2px #000; pointer-events: none; }
+  body:not(.desktop) #keyhelp { display: none; }
+
+  /* ---------- Telas ---------- */
+  .screen { position: fixed; inset: 0; z-index: 10; display: flex; align-items: safe center; justify-content: safe center; padding: 20px; overflow: auto; }
+  .screen.dim { background: rgba(15, 6, 35, .72); backdrop-filter: blur(4px); }
+  .card { background: linear-gradient(180deg, #ffffff, #f3ecff); color: #2a1650; border-radius: 28px; padding: 22px 24px; max-width: 560px; width: 100%; box-shadow: 0 14px 0 rgba(0,0,0,.25), 0 20px 60px rgba(0,0,0,.4); text-align: center; position: relative; }
+  .card h2 { margin: 0 0 4px; font-size: 30px; line-height: 1.1; }
+  .card p { font-size: 17px; line-height: 1.35; margin: 8px 0; }
+  .btn { display: inline-block; border: none; font-family: inherit; font-weight: 800; font-size: 20px; padding: 10px 24px; border-radius: 18px; color: #fff; background: linear-gradient(160deg, #ff4081, #c2185b); box-shadow: 0 6px 0 #880e4f; cursor: pointer; margin: 6px; }
+  .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #880e4f; }
+  .btn.blue { background: linear-gradient(160deg, #42a5f5, #1565c0); box-shadow: 0 6px 0 #0d47a1; }
+  .btn.green { background: linear-gradient(160deg, #66bb6a, #2e7d32); box-shadow: 0 6px 0 #1b5e20; }
+  .btn.gray { background: linear-gradient(160deg, #9e9e9e, #616161); box-shadow: 0 6px 0 #424242; font-size: 16px; }
+  .btn.big { font-size: 28px; padding: 12px 40px; }
+
+  #title { background: radial-gradient(ellipse at 50% 30%, #ff7eb3 0%, #7c4dff 45%, #1a1033 100%); flex-direction: column; text-align: center; }
+  @media (max-height: 520px) { #title .art { width: 110px; margin: 2px 0 6px; } #title .logo { font-size: 48px; } #title .sub { margin: 2px 0 6px; font-size: 22px; } .card { padding: 14px 18px; } .card h2 { font-size: 24px; } .btn.big { font-size: 22px; padding: 8px 28px; } #missions { width: min(260px, 40vw); } }
+  #title .logo { font-size: clamp(46px, 11vw, 96px); font-weight: 800; line-height: .9; letter-spacing: 1px; color: #fff; text-shadow: 0 6px 0 #c2185b, 0 12px 0 rgba(0,0,0,.25); transform: rotate(-3deg); }
+  #title .logo span { display: inline-block; animation: bob 2s ease-in-out infinite; }
+  #title .sub { font-size: clamp(20px, 4.5vw, 32px); font-weight: 800; color: #ffeb3b; text-shadow: 0 3px 0 #6a1b9a; margin: 6px 0 12px; }
+  #title .art { width: min(220px, 42vw); border-radius: 14px; border: 6px solid #fff; transform: rotate(4deg); box-shadow: 0 10px 30px #0006; margin: 6px 0 14px; }
+  #title .credit { font-size: 15px; opacity: .9; margin-top: 10px; font-weight: 700; }
+  @keyframes bob { 50% { transform: translateY(-6px); } }
+  #loading { font-size: 18px; font-weight: 700; opacity: .8; margin-top: 8px; }
+
+  #map .card { max-width: 900px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-top: 14px; }
+  .lvl { border-radius: 18px; padding: 10px; color: #fff; text-align: left; cursor: pointer; position: relative; min-height: 112px; box-shadow: 0 6px 0 rgba(0,0,0,.25); border: 3px solid rgba(255,255,255,.5); transition: transform .1s; }
+  .lvl:active { transform: scale(.97); }
+  .lvl .n { font-size: 13px; font-weight: 800; opacity: .85; }
+  .lvl .e { font-size: 32px; line-height: 1.1; }
+  .lvl .t { font-size: 16px; font-weight: 800; line-height: 1.1; }
+  .lvl .h { font-size: 12px; font-weight: 700; opacity: .9; margin-top: 2px; }
+  .lvl .done { position: absolute; top: 8px; right: 10px; font-size: 22px; }
+  .lvl.locked { background: linear-gradient(160deg, #b0a6c4, #7e7396) !important; cursor: default; opacity: .8; }
+  .lvl.locked .soon { position: absolute; right: 8px; top: 8px; font-size: 11px; background: #0003; border-radius: 8px; padding: 0 6px; font-weight: 800; }
+  .tips { text-align: left; font-size: 16px; margin: 10px auto; padding-left: 20px; max-width: 460px; }
+  .tips li { margin: 3px 0; }
+  .heroes { font-weight: 800; color: #7b1fa2; }
+  .row { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin-top: 10px; }
+  .seg { display: inline-flex; background: #e9e1f7; border-radius: 14px; padding: 4px; gap: 4px; margin: 6px; }
+  .seg button { border: none; font-family: inherit; font-weight: 800; font-size: 15px; padding: 6px 12px; border-radius: 10px; background: transparent; color: #5e35b1; cursor: pointer; }
+  .seg button.on { background: #7c4dff; color: #fff; }
+  .bigscore { font-size: 44px; font-weight: 800; color: #e91e63; line-height: 1; }
+  .pencilbig { font-size: 60px; animation: bob 1.5s infinite; display: inline-block; }
+  .ctrl { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; text-align: left; font-size: 16px; max-width: 440px; margin: 10px auto; }
+  .ctrl b { white-space: nowrap; }
+  .close { position: absolute; top: 10px; right: 14px; font-size: 26px; cursor: pointer; color: #7b1fa2; font-weight: 800; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="vignette"></div>
+<div id="underwater"></div>
+<div id="lookzone"></div>
+
+<div id="hud" class="hidden">
+  <div id="topbar">
+    <div class="chip" id="levelname">—</div>
+    <div class="chip" id="scorechip">💥 <span id="score">0</span> <small>bagunça</small></div>
+    <div class="chip" id="stickers"></div>
+    <div class="chip" id="guidebtn" title="Para onde ir?">🧭</div>
+    <div class="chip" id="pausebtn">⏸</div>
+  </div>
+  <div id="herobadge"></div>
+  <div class="chip" id="missions"><div class="title"><span>📋 MISSÕES</span><span class="tog">▾</span></div><div class="list"></div></div>
+  <div id="say"></div>
+  <div id="toast"></div>
+  <div id="combo"></div>
+  <div id="floats"></div>
+  <div id="compass"></div>
+  <div id="powers"></div>
+  <div id="timer"></div>
+</div>
+<div id="keyhelp" class="hidden">WASD: andar · Espaço: pular/asas/planar · E: ação (segure para carregar) · C: cambalhota · Q: trocar · G: para onde ir · Esc: pausa</div>
+<div id="achtoast"></div>
+
+<div id="touch" class="hidden">
+  <div id="joybase"><div id="joyknob"></div></div>
+  <div id="joyhint">◀ arraste aqui para andar</div>
+  <div class="tbtn" id="btnSwap"><span class="ico">🔄</span><span class="lbl">Trocar</span></div>
+  <div class="tbtn" id="btnRoll"><span class="ico">🌀</span><span class="lbl">Rolar</span></div>
+  <div id="chargebar"><i></i></div>
+  <div class="tbtn" id="btnAction"><span class="ico">👢</span><span class="lbl">Soprar</span></div>
+  <div class="tbtn" id="btnJump"><span class="ico">⬆️</span><span class="lbl">Pular</span></div>
+</div>
+
+<!-- Tela inicial -->
+<div class="screen" id="title">
+  <div class="logo"><span>TORCEDO</span></div>
+  <div class="sub">e o Caderno sem Cor</div>
+  <img class="art" src="img/torcedo.jpg" alt="Desenho do Torcedo feito pelo Pedro">
+  <div><button class="btn big" id="playbtn">▶ JOGAR</button></div>
+  <div><button class="btn blue" id="howbtn">🎮 Como jogar</button></div>
+  <div id="loading">Carregando o mundo 3D...</div>
+  <div class="credit">Personagens criados pelo Pedro ✏️</div>
+</div>
+
+<!-- Mapa das fases -->
+<div class="screen dim hidden" id="map">
+  <div class="card">
+    <h2>🗺️ Mapa das Fases</h2>
+    <p>Recupere os Lápis Mágicos e devolva as cores ao caderno do Pedro!</p>
+    <div class="row">
+      <button class="btn blue small" id="m-album">🃏 Álbum</button>
+      <button class="btn small" id="m-achs">🏆 Conquistas</button>
+      <button class="btn green small" id="m-free">🎪 Bagunça Livre</button>
+      <button class="btn gray small toggle" id="m-easy">🐣 Modo fácil</button>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="row"><button class="btn gray" id="maptitle">⬅ Início</button></div>
+  </div>
+</div>
+
+<!-- História da fase -->
+<div class="screen dim hidden" id="story">
+  <div class="card">
+    <div style="font-size:54px" id="st-emoji"></div>
+    <h2 id="st-name"></h2>
+    <div class="heroes" id="st-heroes"></div>
+    <p id="st-text"></p>
+    <ul class="tips" id="st-tips"></ul>
+    <button class="btn big green" id="st-go">Começar!</button>
+    <div><button class="btn gray" id="st-back">⬅ Mapa</button></div>
+  </div>
+</div>
+
+<!-- Pausa -->
+<div class="screen dim hidden" id="pause">
+  <div class="card">
+    <h2>⏸ Pausa</h2>
+    <div class="row"><button class="btn green" id="p-resume">▶ Continuar</button></div>
+    <div class="row"><button class="btn blue" id="p-restart">🔁 Recomeçar fase</button><button class="btn" id="p-map">🗺️ Mapa</button></div>
+    <p><b>Som</b></p>
+    <div class="seg" id="seg-sound"><button data-v="on">🔊 Ligado</button><button data-v="off">🔇 Desligado</button></div>
+    <p><b>Gráficos</b></p>
+    <div class="seg" id="seg-q"><button data-v="high">✨ Top</button><button data-v="medium">🙂 Médio</button><button data-v="low">⚡ Leve</button></div>
+    <div class="row"><button class="btn gray small toggle" id="p-easy">🐣 Modo fácil</button><button class="btn gray" id="p-how">🎮 Controles</button></div>
+  </div>
+</div>
+
+<!-- Vitória -->
+<div class="screen dim hidden" id="win">
+  <div class="card">
+    <div class="pencilbig">✏️</div>
+    <h2 id="w-title">FASE COMPLETA!</h2>
+    <div class="stars" id="w-stars"></div>
+    <div id="w-starinfo" style="font-size:14px;line-height:1.3"></div>
+    <p id="w-text"></p>
+    <div>Pontos de Bagunça</div>
+    <div class="bigscore" id="w-score">0</div>
+    <p id="w-best"></p>
+    <div id="w-medal" style="font-size:17px;margin:4px 0 6px"></div>
+    <div class="row"><button class="btn green big" id="w-next">Próxima fase ▶</button></div>
+    <div class="row"><button class="btn blue" id="w-again">🔁 Jogar de novo</button><button class="btn" id="w-map">🗺️ Mapa</button></div>
+  </div>
+</div>
+
+<!-- Álbum de figurinhas -->
+<div class="screen dim hidden" id="album">
+  <div class="card wide">
+    <h2>🃏 Álbum de Figurinhas do Pedro</h2>
+    <p id="al-count"></p>
+    <div id="al-grid"></div>
+    <div class="row"><button class="btn gray" id="al-back">⬅ Mapa</button></div>
+  </div>
+</div>
+
+<!-- Conquistas -->
+<div class="screen dim hidden" id="achs">
+  <div class="card wide">
+    <h2>🏆 Conquistas</h2>
+    <p id="ac-count"></p>
+    <div id="ac-list"></div>
+    <div class="row"><button class="btn gray" id="ac-back">⬅ Mapa</button></div>
+  </div>
+</div>
+
+<!-- Final do jogo -->
+<div class="screen dim hidden" id="ending">
+  <div class="card">
+    <div style="font-size:56px">🌈✏️🎉</div>
+    <h2>AS CORES VOLTARAM!</h2>
+    <p>O Torcedo e o Dino venceram a Grande Borracha e recuperaram os 15 Lápis Mágicos. O caderno do Pedro está colorido de novo!</p>
+    <img src="img/torcedo.jpg" style="width:120px;border-radius:10px;border:5px solid #fff;transform:rotate(-4deg);box-shadow:0 6px 20px #0004">
+    <img src="img/dino.jpg" style="width:120px;border-radius:10px;border:5px solid #fff;transform:rotate(5deg);box-shadow:0 6px 20px #0004">
+    <p><b>Personagens e desenhos: Pedro</b><br>Obrigado por jogar!</p>
+    <div class="row"><button class="btn green big" id="end-map">🗺️ Voltar ao mapa</button></div>
+  </div>
+</div>
+
+<!-- Como jogar -->
+<div class="screen dim hidden" id="how">
+  <div class="card">
+    <div class="close" id="how-x">✕</div>
+    <h2>🎮 Como jogar</h2>
+    <p><b>No celular/tablet</b></p>
+    <div class="ctrl">
+      <b>Lado esquerdo</b><span>arraste o dedo para andar</span>
+      <b>Lado direito</b><span>arraste para girar a câmera</span>
+      <b>⬆️ Pular</b><span>no ar, aperte de novo para bater as asas (3x). Segure para planar</span>
+      <b>👢 Soprar</b><span>o Torcedo sopra pela bota e joga tudo longe</span>
+      <b>🎵 Pisão</b><span>o Dino bate o pé e solta uma onda musical</span>
+      <b>🔄 Trocar</b><span>nas fases em dupla, troca entre Torcedo e Dino</span>
+      <b>🌀 Rolar</b><span>cambalhota rápida: atravessa ataques e derruba coisas</span>
+      <b>Segurar 👢/🎵</b><span>carrega um SUPER sopro / SUPER pisão</span>
+      <b>🧭</b><span>mostra uma seta para o próximo objetivo</span>
+    </div>
+    <p><b>No computador</b></p>
+    <div class="ctrl">
+      <b>WASD / setas</b><span>andar</span>
+      <b>Espaço</b><span>pular / asas / planar</span>
+      <b>E</b><span>soprar ou pisão</span>
+      <b>Q</b><span>trocar personagem</span>
+      <b>C</b><span>cambalhota</span>
+      <b>G</b><span>seta para o próximo objetivo</span>
+      <b>Mouse</b><span>arraste para girar a câmera, roda para zoom</span>
+      <b>Esc</b><span>pausa</span>
+    </div>
+    <p>💥 Trombe, sopre e derrube tudo para ganhar <b>Pontos de Bagunça</b>. Faça várias seguidas para fazer <b>COMBO</b>!</p>
+    <p>✋ Perto de um objeto que dá pra carregar, o botão de ação vira <b>Pegar</b>. Aperte de novo para <b>Jogar</b>.</p>
+    <p>⚡🦘🛡️🧲💥 <b>Itens especiais</b>: velocidade, super pulo, escudo, ímã de tinta e super força.</p>
+    <p>⭐⭐⭐ Cada fase dá 3 estrelas: terminar, achar as <b>3 figurinhas do Pedro 🃏</b> escondidas e fazer bastante bagunça!</p>
+  </div>
+</div>
+
+<script type="module" src="g.js"></script>
+</body>
+</html>
