@@ -1,8 +1,18 @@
 // Service worker: guarda o jogo no aparelho para funcionar sem internet.
-const CACHE = 'torcedo-40425ddb6a'; // trocado automaticamente a cada build (tools/build.sh)
-const CORE = ['./', './index.html', './manifest.json', './l.js', './img/torcedo.jpg', './img/dino.jpg', './img/praia.jpg', './img/esmeralda.jpg', './img/arvore.jpg', './img/galaxia.jpg', './img/amigos.jpg', './img/icon-192.png', './img/icon-512.png'];
+const CACHE = 'torcedo-2843ba6cb4'; // trocado automaticamente a cada build (tools/build.sh)
+const CORE = ['./', './index.html', './manifest.json', './l.js', './img/galaxia.jpg', './img/fig/torcedo.png', './img/fig/dino.png', './img/fig/amigos.png', './img/fig/quadro-torcedo.jpg', './img/fig/quadro-dino.jpg', './img/icon-192.png', './img/icon-512.png'];
 
-self.addEventListener('message', e => { if (e.data === 'skip') self.skipWaiting(); });
+async function stash(urls) {
+  const c = await caches.open(CACHE);
+  await Promise.all(urls.map(async u => {
+    try { if (await c.match(u)) return; const res = await fetch(u); if (res.ok) await c.put(u, res); } catch (err) { }
+  }));
+}
+self.addEventListener('message', e => {
+  if (e.data === 'skip') self.skipWaiting();
+  // a página manda a lista do que carregou: guarda o que ainda não está no cache (para abrir sem internet)
+  if (e.data && Array.isArray(e.data.cache)) e.waitUntil(stash(e.data.cache.slice(0, 300)));
+});
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
 });

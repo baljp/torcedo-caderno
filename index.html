@@ -15,11 +15,11 @@
 <meta property="og:title" content="Torcedo e o Caderno sem Cor 🐰🪶👢">
 <meta property="og:description" content="Jogo 3D grátis no navegador: 20 fases com o Torcedo, o Dino e os amigos. Joga no celular e no computador.">
 <meta property="og:url" content="https://torcedo-caderno.vercel.app/">
-<meta property="og:image" content="https://torcedo-caderno.vercel.app/img/icon-512.png">
+<meta property="og:image" content="https://torcedo-caderno.vercel.app/img/og.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Torcedo e o Caderno sem Cor">
 <meta name="twitter:description" content="Jogo 3D grátis: 20 fases com o Torcedo, o Dino e os amigos.">
-<meta name="twitter:image" content="https://torcedo-caderno.vercel.app/img/icon-512.png">
+<meta name="twitter:image" content="https://torcedo-caderno.vercel.app/img/og.jpg">
 <link rel="icon" type="image/png" href="img/icon-192.png">
 <script>
 /* proteção leve: abre fora de iframes de terceiros, sem menu de contexto, sem arrastar nem copiar */
@@ -175,6 +175,8 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
   .alcards { display: flex; gap: 10px; }
   .card-st { width: 92px; height: 120px; border-radius: 10px; border: 4px solid #ffd54f; position: relative; overflow: hidden; background: #fff; box-shadow: 0 4px 0 #0002; }
   .card-st img { width: 100%; height: 100%; object-fit: cover; }
+  .card-st img.port { object-fit: contain; padding: 6px; background: radial-gradient(circle at 50% 40%, #fff6c9, #ffd1f0 60%, #b9a6ff); }
+  .end3d { width: 130px; height: 130px; object-fit: contain; filter: drop-shadow(0 8px 10px #0006); }
   .card-st span { position: absolute; left: 4px; bottom: 2px; font-size: 12px; font-weight: 800; color: #fff; text-shadow: 0 1px 2px #000; }
   .card-st.empty { border-color: #c5b8e0; background: repeating-linear-gradient(45deg, #ede7f6, #ede7f6 8px, #e1d8f2 8px, #e1d8f2 16px); display: grid; place-items: center; }
   .card-st.empty b { font-size: 40px; color: #b39ddb; }
@@ -194,7 +196,8 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
 
   /* ---------- Controles de toque ---------- */
   #touch { position: fixed; inset: 0; z-index: 4; pointer-events: none; }
-  #joybase { position: absolute; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,.15); border: 3px solid rgba(255,255,255,.4); display: none; }
+  #joybase { position: absolute; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,.15); border: 3px solid rgba(255,255,255,.4); display: none; pointer-events: none; }
+  #joybase.idle { opacity: .5; border-style: dashed; }
   #joyknob { position: absolute; left: 30px; top: 30px; width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,.75); box-shadow: 0 4px 10px #0005; }
   #joyhint { position: absolute; left: 24px; bottom: max(28px, env(safe-area-inset-bottom)); font-size: 13px; font-weight: 700; opacity: .6; }
   .tbtn { position: absolute; pointer-events: auto; border-radius: 50%; display: grid; place-items: center; text-align: center; font-weight: 800; color: #fff; border: 3px solid rgba(255,255,255,.55); box-shadow: 0 6px 0 rgba(0,0,0,.3); touch-action: none; cursor: pointer; }
@@ -258,10 +261,14 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
     #zoombox, body.lefty #zoombox { flex-direction: row; top: auto; bottom: max(10px, env(safe-area-inset-bottom)); left: 50%; right: auto; transform: translateX(-50%); }
   }
   @media (max-height: 520px) and (pointer: fine) { #zoombox { bottom: 70px; flex-direction: row; } }
-  @media (max-height: 520px) { #title .art { width: 110px; margin: 2px 0 6px; } #title .logo { font-size: 48px; } #title .sub { margin: 2px 0 6px; font-size: 22px; } .card { padding: 14px 18px; } .card h2 { font-size: 24px; } .btn.big { font-size: 22px; padding: 8px 28px; } #missions { width: min(260px, 40vw); } }
+  @media (max-height: 520px) { #title .art { width: 110px; margin: 2px 0 6px; } #title .art3d { width: 150px; height: 42vh; margin: 0 0 4px; } #title .logo { font-size: 48px; } #title .sub { margin: 2px 0 6px; font-size: 22px; } .card { padding: 14px 18px; } .card h2 { font-size: 24px; } .btn.big { font-size: 22px; padding: 8px 28px; } #missions { width: min(260px, 40vw); } }
   #title .logo { font-size: clamp(46px, 11vw, 96px); font-weight: 800; line-height: .9; letter-spacing: 1px; color: #fff; text-shadow: 0 6px 0 #c2185b, 0 12px 0 rgba(0,0,0,.25); transform: rotate(-3deg); }
   #title .logo span { display: inline-block; animation: bob 2s ease-in-out infinite; }
   #title .sub { font-size: clamp(20px, 4.5vw, 32px); font-weight: 800; color: #ffeb3b; text-shadow: 0 3px 0 #6a1b9a; margin: 6px 0 12px; }
+  #title .art3d { position: relative; width: min(260px, 56vw); height: min(300px, 34vh); margin: 2px 0 10px; touch-action: none; }
+  #title .art3d canvas { width: 100%; height: 100%; display: block; cursor: grab; }
+  #title .art3d-name { position: absolute; left: 50%; bottom: 2px; transform: translateX(-50%); background: #fff; color: #3b1e8a; font-weight: 900; border-radius: 999px; padding: 3px 14px; font-size: 16px; box-shadow: 0 4px 12px #0005; white-space: nowrap; pointer-events: none; }
+  #title .art3d-hint { position: absolute; left: 50%; transform: translateX(-50%); bottom: -18px; white-space: nowrap; font-size: 12px; color: #fff; opacity: .8; transition: opacity .4s; pointer-events: none; }
   #title .art { width: min(220px, 42vw); border-radius: 14px; border: 6px solid #fff; transform: rotate(4deg); box-shadow: 0 10px 30px #0006; margin: 6px 0 14px; }
   #title .credit { font-size: 15px; opacity: .9; margin-top: 10px; font-weight: 700; }
   @keyframes bob { 50% { transform: translateY(-6px); } }
@@ -339,7 +346,7 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
 <div class="screen" id="title">
   <div class="logo"><span>TORCEDO</span></div>
   <div class="sub">e o Caderno sem Cor</div>
-  <img class="art" src="img/torcedo.jpg" alt="Desenho do Torcedo feito pelo Pedro">
+  <img class="art" src="img/fig/torcedo.png" alt="Torcedo" style="border:0;box-shadow:none;background:none">
   <div class="mainmenu">
     <button class="btn big green hidden" id="contbtn">⏩ Continuar</button>
     <button class="btn big" id="playbtn">▶ JOGAR</button>
@@ -476,9 +483,9 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
     <div style="font-size:56px">🌈✏️🎉</div>
     <h2 id="end-title">AS CORES VOLTARAM!</h2>
     <p id="end-text">O Torcedo e o Dino venceram a Grande Borracha e recuperaram os 15 Lápis Mágicos. O caderno do Pedro está colorido de novo!</p>
-    <img src="img/torcedo.jpg" style="width:120px;border-radius:10px;border:5px solid #fff;transform:rotate(-4deg);box-shadow:0 6px 20px #0004">
-    <img src="img/dino.jpg" style="width:120px;border-radius:10px;border:5px solid #fff;transform:rotate(5deg);box-shadow:0 6px 20px #0004">
-    <img id="end-img3" src="img/amigos.jpg" style="display:none;width:150px;border-radius:10px;border:5px solid #fff;transform:rotate(-2deg);box-shadow:0 6px 20px #0004">
+    <img class="end3d" src="img/fig/torcedo.png" alt="Torcedo" style="transform:rotate(-4deg)">
+    <img class="end3d" src="img/fig/dino.png" alt="Dino" style="transform:rotate(4deg)">
+    <img class="end3d" id="end-img3" src="img/fig/amigos.png" alt="Pipow, Bing e Baba" style="display:none;width:210px;height:auto">
     <p><b>Personagens e desenhos: Pedro</b><br>Obrigado por jogar!</p>
     <div class="row"><button class="btn green big" id="end-map">🗺️ Voltar ao mapa</button></div>
   </div>
