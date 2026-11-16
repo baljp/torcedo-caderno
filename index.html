@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Torcedo e o Caderno sem Cor</title>
-<meta name="description" content="Jogo 3D infantil: ajude o Torcedo e o Dino a devolver as cores ao caderno em 15 fases. Personagens criados pelo Pedro.">
+<meta name="description" content="Jogo 3D infantil: ajude o Torcedo e o Dino a devolver as cores ao caderno em 20 fases, com os amigos Pipow, Bing e Baba. Personagens criados pelo Pedro.">
 <meta name="robots" content="noai, noimageai, noarchive">
 <meta name="tdm-reservation" content="1">
 <meta name="copyright" content="© 2026 João Batista Ramalho de Lima — todos os direitos reservados (Lei 9.610/98). Personagens e desenhos do Pedro.">
@@ -13,12 +13,12 @@
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="Torcedo e o Caderno sem Cor">
 <meta property="og:title" content="Torcedo e o Caderno sem Cor 🐰🪶👢">
-<meta property="og:description" content="Jogo 3D grátis no navegador: 15 fases com o Torcedo e o Dino. Joga no celular e no computador.">
+<meta property="og:description" content="Jogo 3D grátis no navegador: 20 fases com o Torcedo, o Dino e os amigos. Joga no celular e no computador.">
 <meta property="og:url" content="https://torcedo-caderno.vercel.app/">
 <meta property="og:image" content="https://torcedo-caderno.vercel.app/img/icon-512.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Torcedo e o Caderno sem Cor">
-<meta name="twitter:description" content="Jogo 3D grátis: 15 fases com o Torcedo e o Dino.">
+<meta name="twitter:description" content="Jogo 3D grátis: 20 fases com o Torcedo, o Dino e os amigos.">
 <meta name="twitter:image" content="https://torcedo-caderno.vercel.app/img/icon-512.png">
 <link rel="icon" type="image/png" href="img/icon-192.png">
 <script>
@@ -232,6 +232,32 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
   .btn.big { font-size: 28px; padding: 12px 40px; }
 
   #title { background: radial-gradient(ellipse at 50% 30%, #ff7eb3 0%, #7c4dff 45%, #1a1033 100%); flex-direction: column; text-align: center; }
+  /* celular em pé: a barra de cima precisa caber (pausa sempre visível) */
+  @media (max-width: 600px) {
+    #topbar { gap: 6px; left: 8px; right: 8px; }
+    #topbar .chip { padding: 4px 8px; }
+    #levelname { font-size: 13px; flex: 0 1 auto; min-width: 0; max-width: 34vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #scorechip { font-size: 17px; flex: 0 0 auto; } #scorechip small { display: none; }
+    #stickers { flex: 0 0 auto; white-space: nowrap; }
+    #fsbtn, #guidebtn, #pausebtn { width: 40px; height: 40px; flex: 0 0 40px; padding: 0; font-size: 20px; }
+    #herobadge { left: 8px; right: 8px; flex-wrap: wrap; gap: 4px; }
+    #herobadge span { font-size: 12px; padding: 2px 7px; }
+    #herobadge:not([style*="none"]) + #missions { top: calc(max(10px, env(safe-area-inset-top)) + 100px); }
+    #missions { right: 8px; width: min(260px, 62vw); }
+    #say { bottom: 270px; font-size: 16px; }
+    #airbar { bottom: auto; top: calc(max(10px, env(safe-area-inset-top)) + 152px); }
+  }
+  /* celular deitado: zoom no meio da lateral, fala e barras sem se encavalar */
+  @media (max-height: 520px) {
+    #say { bottom: 96px; font-size: 15px; max-width: min(440px, 48vw); padding: 8px 14px; }
+    #herobadge { right: calc(min(260px, 40vw) + 24px); flex-wrap: wrap; gap: 4px; }
+    #herobadge span { font-size: 12px; padding: 2px 8px; }
+    #airbar { bottom: auto; top: calc(max(10px, env(safe-area-inset-top)) + 152px); }
+  }
+  @media (max-height: 520px) and (pointer: coarse) {
+    #zoombox, body.lefty #zoombox { flex-direction: row; top: auto; bottom: max(10px, env(safe-area-inset-bottom)); left: 50%; right: auto; transform: translateX(-50%); }
+  }
+  @media (max-height: 520px) and (pointer: fine) { #zoombox { bottom: 70px; flex-direction: row; } }
   @media (max-height: 520px) { #title .art { width: 110px; margin: 2px 0 6px; } #title .logo { font-size: 48px; } #title .sub { margin: 2px 0 6px; font-size: 22px; } .card { padding: 14px 18px; } .card h2 { font-size: 24px; } .btn.big { font-size: 22px; padding: 8px 28px; } #missions { width: min(260px, 40vw); } }
   #title .logo { font-size: clamp(46px, 11vw, 96px); font-weight: 800; line-height: .9; letter-spacing: 1px; color: #fff; text-shadow: 0 6px 0 #c2185b, 0 12px 0 rgba(0,0,0,.25); transform: rotate(-3deg); }
   #title .logo span { display: inline-block; animation: bob 2s ease-in-out infinite; }
