@@ -1,5 +1,5 @@
 // Service worker: guarda o jogo no aparelho para funcionar sem internet.
-const CACHE = 'torcedo-2843ba6cb4'; // trocado automaticamente a cada build (tools/build.sh)
+const CACHE = 'torcedo-7bfe006c5b'; // trocado automaticamente a cada build (tools/build.sh)
 const CORE = ['./', './index.html', './manifest.json', './l.js', './img/galaxia.jpg', './img/fig/torcedo.png', './img/fig/dino.png', './img/fig/amigos.png', './img/fig/quadro-torcedo.jpg', './img/fig/quadro-dino.jpg', './img/icon-192.png', './img/icon-512.png'];
 
 async function stash(urls) {

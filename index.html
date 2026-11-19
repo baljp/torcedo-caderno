@@ -117,6 +117,8 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
   #zoombox .zb { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-size: 24px; font-weight: 800; color: #fff; cursor: pointer;
     background: rgba(30, 16, 70, .45); border: 2px solid rgba(255,255,255,.45); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); user-select: none; }
   #zoombox .zb:active { transform: scale(.9); background: rgba(124, 77, 255, .7); }
+  #zoombox #camCenter { font-size: 20px; }
+  @media (pointer: coarse) and (min-width: 700px) and (min-height: 700px) { #zoombox .zb { width: 52px; height: 52px; font-size: 28px; } }
   .btn.orange { background: linear-gradient(#ffb74d, #f57c00); box-shadow: 0 5px 0 #a64f00; }
   .mainmenu { display: flex; flex-direction: column; align-items: center; gap: 2px; }
   .mainmenu .btn.big { min-width: 280px; }
@@ -307,7 +309,7 @@ document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
 
 <div id="hud" class="hidden">
   <div id="savedot">💾 Salvo</div>
-  <div id="zoombox"><div class="zb" id="zoomIn" title="Aproximar">＋</div><div class="zb" id="zoomOut" title="Afastar">－</div></div>
+  <div id="zoombox"><div class="zb" id="zoomIn" title="Aproximar">＋</div><div class="zb" id="camCenter" title="Centralizar câmera atrás do herói">🎯</div><div class="zb" id="zoomOut" title="Afastar">－</div></div>
   <div id="topbar">
     <div class="chip" id="levelname">—</div>
     <div class="chip" id="scorechip">💥 <span id="score">0</span> <small>bagunça</small></div>
